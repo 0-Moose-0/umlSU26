@@ -88,6 +88,29 @@ for msg in consumer:
     event = msg.value
     print(f"[event] {event}")
 
+    if event.get("event") != "ImagePushed":
+        print("    ignoring non-ImagePushed event")
+        continue
+
+    version = event.get("version")
+    if not version:
+        print("    missing version; cannot test image")
+        continue
+
+    print(f"    testing calculator:{version}")
+
+    try:
+        deploy(version)
+
+        if run_tests():
+            print(f"    acceptance test passed for calculator:{version}")
+            promote(version)
+        else:
+            print(f"    acceptance test failed for calculator:{version}; not promoting")
+
+    finally:
+        teardown(version)
+
     # TODO: read the version from the event.
     # TODO: deploy(version), then run_tests(). If it passes, promote(version).
     #       If it fails, do nothing.
