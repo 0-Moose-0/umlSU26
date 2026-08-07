@@ -8,7 +8,7 @@ public class CalculatorTest {
 
     @Test
     public void sumsPositiveNumbers() {
-        assertEquals(5, calculator.sum(2, 3));
+        assertEquals(6, calculator.sum(2, 3));
     }
 
     @Test
